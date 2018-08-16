@@ -1,9 +1,7 @@
 from pymatgen import MPRester
 from pymatgen.core.periodic_table import Element
 from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
-from pymatgen.phasediagram.maker import PhaseDiagram
-#from pymatgen.analysis.phase_diagram.maker import PhaseDiagram
-import pymatgen.phasediagram.analyzer as pda
+from pymatgen.analysis.phase_diagram import PhaseDiagram
 import os, types
 import warnings
 from optparse import OptionParser
@@ -60,9 +58,9 @@ if __name__ == "__main__":
 
 #-------------------------------------------------------------------------
     if options.format == 'poscar':
-       filename = options.element+'.vasp'
+       filename = 'MPR.vasp'
     else:
-       filename = options.element+'.cif'
+       filename = 'MPR.cif'
  
     if os.path.isfile(filename):
        os.remove(filename)
@@ -87,4 +85,3 @@ if __name__ == "__main__":
               content = CifWriter(struc, symprec=0.01).write_file()
            with open(filename, 'a+') as f:
                 f.writelines(content)
-
