@@ -1,3 +1,13 @@
+#!/usr/bin/env  /usr/local/bin/python
+# encoding: utf-8
+
+'''
+    $Author: Qiang Zhu $
+    perform basic vasp calculations for a series of POSCARs
+    python auto-calc.py -f POSCARs
+'''
+
+
 from pymatgen.io.vasp.sets import MPRelaxSet, MPStaticSet, MPNonSCFSet
 from pymatgen.io.vasp import Vasprun, BSVasprun
 from pymatgen.electronic_structure.plotter import DosPlotter, BSPlotter
@@ -49,14 +59,10 @@ def Read_POSCARS(filename):
 
 
 parser = OptionParser()
-parser.add_option("-i",  "--id",   dest='id',
-                  help="by id from Materials Project")
 parser.add_option("-f",  "--file", dest="posfile",
                   help="by filename in POSCAR format")
 (options, args) = parser.parse_args()
 
-# os.system("source /gpfsHOME/apps/intel/compiler_2011.10.319/bin/compilervars.sh intel64")
-# cmd = ' mpirun -np 24 /share/apps/bin/vasp541-2013sp1/vasp_std > vasp_log'
 cmd = ' mpirun -np 24 /share/apps/bin/vasp541-2013sp1/vasp_std > vasp_log'
 
 opt_dir = 'Opt'
@@ -64,12 +70,8 @@ static_dir = 'Static'
 band_dir = 'Band'
 dos_dir = 'Dos'
 
-if options.id is None:
-    todo = Read_POSCARS(options.posfile)
-else:
-    print('Reading Structure from MP Database')
-    mpr = MPRester('lgocJhBEiPSkx61f')
-    todo = mpr.get_structure_by_material_id(options.id)
+todo = Read_POSCARS(options.posfile)
+
 count = 0
 for struc_id in todo:
     count = count + 1
@@ -171,7 +173,7 @@ for struc_id in todo:
         run_vasp(cmd, dos_dir)
         os.system('cp ' + dos_dir + '/vasprun.xml  ./dos-vasprun.xml')
 
-        # 2nd run to obtain Band structure
+        # 3rd run to obtain Band structure
         band = MPNonSCFSet.from_prev_calc(static_dir,
                                           mode="line",
                                           standardize=True,
