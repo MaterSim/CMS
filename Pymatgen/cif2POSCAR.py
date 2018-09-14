@@ -10,15 +10,13 @@
 from optparse import OptionParser
 import pymatgen as mg
 from pymatgen.io.cif import CifWriter
-from pymatgen.io.vasp import Poscar
-from pymatgen.symmetry.analyzer import SpacegroupAnalyzer
 
-#------------------------------------------------------------------
-#-------------------------------- Options -------------------------
+# ------------------------------------------------------------------
+# -------------------------------- Options -------------------------
 parser = OptionParser()
 parser.add_option('-i', '--input',   help='input POSCAR file')
 parser.add_option('-o', '--output',  help='output cif file')
 
 (options, args) = parser.parse_args()
 structure = mg.Structure.from_file(options.input)
-structure.to(filename=options.output) 
+structure.to(filename=options.output)
