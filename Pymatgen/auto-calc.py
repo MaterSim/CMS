@@ -1,4 +1,4 @@
-#!/usr/bin/env  /usr/local/bin/python
+#!/usr/bin/env python
 # encoding: utf-8
 
 '''
