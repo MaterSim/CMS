@@ -183,11 +183,20 @@ for struc_id in todo:
         os.system('cp ' + band_dir + '/vasprun.xml  ./band-vasprun.xml')
         os.system('cp ' + band_dir + '/KPOINTS  ./')
 
-        v = BSVasprun(band_dir+"/vasprun.xml")
-        bs = v.get_band_structure(line_mode=True)
+        v = BSVasprun("band-vasprun.xml")
+        bs = v.get_band_structure(kpoints_filename='KPOINTS', line_mode=True)
         plt = BSPlotter(bs)
-        plt.get_plot(vbm_cbm_marker=True, ylim=[-4, 4])
-        plt.save_plot(Name+'-band.png', img_format='png')
+        plt.get_plot(vbm_cbm_marker=True)
+        plt.save_plot(Name+'-band.png', ylim=[-4, 4], img_format='png')
+
+        v = Vasprun('dos-vasprun.xml')
+        tdos = v.tdos
+        cdos = v.complete_dos
+        spd_dos = cdos.get_spd_dos()
+        plotter = DosPlotter(sigma=0.1)
+        plotter.add_dos("Total DOS", tdos)
+        # plotter.add_dos("spd_dos", spd_dos)
+        plotter.save_plot(Name+'-dos.png', img_format='png', xlim=[-4, 4])
 
         shutil.rmtree(band_dir)
         shutil.rmtree(dos_dir)
