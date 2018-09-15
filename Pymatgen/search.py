@@ -5,6 +5,7 @@ from pymatgen.analysis.phase_diagram import PhaseDiagram
 import os
 import warnings
 from optparse import OptionParser
+from pymatgen.io.cif import CifWriter
 
 warnings.filterwarnings("ignore")
 
@@ -84,6 +85,6 @@ if __name__ == "__main__":
             if options.format == 'poscar':
                 content = struc.to(fmt='poscar')
             else:
-                content = CifWriter(struc, symprec=0.01).write_file()
+                content = str(CifWriter(struc, symprec=0.01))
             with open(filename, 'a+') as f:
                 f.writelines(content)
