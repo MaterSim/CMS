@@ -17,7 +17,7 @@ def parse_system(input):
         return input
 
 
-def output_struc(entry, eng):
+def output_struc(entry, eng, tol):
     id = entry.entry_id
     todo = mpr.get_structure_by_material_id(id)
     finder = SpacegroupAnalyzer(todo, symprec=tol, angle_tolerance=5)
@@ -39,26 +39,48 @@ if __name__ == "__main__":
     parser.add_option("-c", "--cut", dest="cutoff", metavar='cutoff',
                       type='float', default=0,
                       help="cutoff energy for e_above_hull")
+
     parser.add_option("-d", "--dim", dest="dimension", type='int',
                       help="export all dimensions", metavar="dimension")
+
     parser.add_option("-e", "--element", dest="element", type='string',
                       help="chemical system", metavar="element")
+
+    parser.add_option("-i", "--id", dest="id", metavar="id",
+                      help="materials id")
+
     parser.add_option("-f", "--format", dest="format", default='poscar',
                       help="export structure in which format, poscar or cif",
-                      metavar="dimension")
+                      metavar="format")
 
     (options, args) = parser.parse_args()
 
     mpr = MPRester('9RTlN5ZOXst6PAdS')
-    system = parse_system(options.element)
-
-    if type(system) is not list:
-        mp_entries = mpr.get_entries(system)
+    strucs = []
+    if options.id is None:
+        system = parse_system(options.element)
+        if type(system) is not list:
+            mp_entries = mpr.get_entries(system)
+        else:
+            mp_entries = mpr.get_entries_in_chemsys(system)
+            pd = PhaseDiagram(mp_entries)
+            if options.dimension is None:
+                options.dimension = len(system)
+        for entry in mp_entries:
+            accept = False
+            if type(system) is list:
+                if len(entry.composition) >= options.dimension:
+                    eng = pd.get_e_above_hull(entry)
+                    if eng <= options.cutoff:
+                        accept = True
+            else:
+                eng = entry.energy_per_atom
+                accept = True
+            if accept:
+                struc = output_struc(entry, eng, tol=1e-2)
+                strucs.append(struc)
     else:
-        mp_entries = mpr.get_entries_in_chemsys(system)
-        pd = PhaseDiagram(mp_entries)
-        if options.dimension is None:
-            options.dimension = len(system)
+        strucs.append(mpr.get_structure_by_material_id(options.id))
 
     if options.format == 'poscar':
         filename = 'MPR.vasp'
@@ -68,23 +90,10 @@ if __name__ == "__main__":
     if os.path.isfile(filename):
         os.remove(filename)
 
-    tol = 0.01
-    for entry in mp_entries:
-        accept = False
-        if type(system) is list:
-            if len(entry.composition) >= options.dimension:
-                eng = pd.get_e_above_hull(entry)
-                if eng <= options.cutoff:
-                    accept = True
+    for struc in strucs:
+        if options.format == 'poscar':
+            content = struc.to(fmt='poscar')
         else:
-            eng = entry.energy_per_atom
-            accept = True
-
-        if accept:
-            struc = output_struc(entry, eng)
-            if options.format == 'poscar':
-                content = struc.to(fmt='poscar')
-            else:
-                content = str(CifWriter(struc, symprec=0.01))
-            with open(filename, 'a+') as f:
-                f.writelines(content)
+            content = str(CifWriter(struc, symprec=0.01))
+        with open(filename, 'a+') as f:
+            f.writelines(content)
