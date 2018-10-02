@@ -4,8 +4,11 @@
 '''
 $Author: Qiang Zhu $
 $Date: 2018-10-01 18:38:44  $
-python Extract_USPEX.py -c POSCAR_0
-python Extract_USPEX.py 
+1, to check if USPEX calc generates the reference structure:
+$ python Extract_USPEX.py -c POSCAR
+
+2, to extract good structures from the calculation
+$ python Extract_USPEX.py 
 '''
 
 import os
@@ -93,7 +96,7 @@ if options.compare:
         p2 = ['{:6.2f}'.format(j) for j in s0.lattice.angles]
         s  =  ' '.join(map(str,p1+p2))
         spg = SpacegroupAnalyzer(s0, symprec=options.tol).get_space_group_symbol()
-        print('%-4d %40s %4d %9.3f %10s %r' % (i+1, s, spg, Energy[i], Origin[i]), dist)
+        print('{0:4d} {1:40s} {2:12s} {3:9.3f} {4:10s} {5:4b}'.format(i+1, s, spg, Energy[i], Origin[i], dist))
         if dist:
             break
 else:
