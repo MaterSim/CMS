@@ -24,7 +24,6 @@ from pymatgen.io.vasp import Poscar
 from pymatgen.io.cif import CifWriter
 
 def export_structure(struc, filename, fileformat='poscar'):
-    """export incar"""
     with open(filename, 'w') as f:
         for s in struc:
             if fileformat == 'poscar':
