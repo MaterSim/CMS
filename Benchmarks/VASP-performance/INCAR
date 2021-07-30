@@ -1,0 +1,12 @@
+INCAR created by Atomic Simulation Environment
+ AGGAC = 0.000000
+ KSPACING = 0.200000
+ POTIM = 0.020000
+ GGA = OR
+ PREC = Accurate
+ IBRION = 2
+ ISIF = 3
+ KGAMMA = .TRUE.
+ LCHARG = .FALSE.
+ LUSE_VDW = .TRUE.
+ LWAVE = .FALSE.
