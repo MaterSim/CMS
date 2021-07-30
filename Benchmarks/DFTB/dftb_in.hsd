@@ -1,0 +1,46 @@
+Geometry = GenFormat { 
+    <<< "geo_end.gen" 
+} 
+ 
+Driver = ConjugateGradient{ 
+   MaxForceComponent = 1E-4 
+   MaxSteps = 500 
+   } 
+Hamiltonian = DFTB{ 
+   Dispersion = DftD3{
+	Damping = BeckeJohnson{
+		a1 = 0.746
+		a2 = 4.191
+	}
+	s6 = 1.0
+	s8 = 3.209
+} 
+   KPointsAndWeights = SupercellFolding { 
+      2 0 0 
+      0 3 0 
+      0 0 2 
+      0.5 0.0 0.5 
+   } 
+   MaxAngularMomentum = { 
+      C = "p" 
+      H = "s" 
+      O = "p" 
+      S = "d" #"p" 
+   } 
+   MaxSCCIterations = 1000 
+   Mixer = DIIS{} 
+   SCC = yes 
+   SCCTolerance = 1e-05 
+   SlaterKosterFiles = Type2FileNames{ 
+      Prefix = /scratch/qzhu/lib/Dftb+sk/mio-1-1/ 
+      Separator = "-" 
+      Suffix = ".skf" 
+      } 
+   } 
+Options { 
+   WriteResultsTag = Yes 
+   } 
+runmanyDftbsteps = True 
+ParserOptions { 
+   IgnoreUnprocessedNodes = Yes  
+} 
