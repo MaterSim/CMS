@@ -32,6 +32,8 @@ In the topic, we are aimed to overview the fundamental elastic theory and apply 
 - [Inorganic crystalline compounds](https://www.nature.com/articles/sdata20159)
 - [Organic crystals](https://onlinelibrary.wiley.com/doi/10.1002/anie.202113988)
 - [A cool online visualization tool](http://progs.coudert.name/elate)
+- [Negative Poisson Ratio 1](https://www.science.org/doi/10.1126/science.279.5356.1522)
+- [Negative Poisson Ratio 2](https://www.nature.com/articles/32842)
 
 ### Modern global optimization methods applied to structure prediction
 
