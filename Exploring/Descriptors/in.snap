@@ -1,0 +1,23 @@
+# Initialize
+units metal
+dimension 3
+boundary p p p
+atom_style atomic
+
+# Read the data file
+read_data data.final-cunb 
+
+# Define the SNAP potential
+pair_style lj/cut 10
+pair_coeff * * 1.0 1.0
+
+# compute ID group-ID snap rcutfac rfac0 twojmax R_1 R_2 ... w_1 w_2 ... keyword values ...
+compute sna all sna/atom 1.0 0.99363 6 3.81 3.83 1.0 0.93
+
+# Output the descriptors
+#dump 1 all custom 1 dump.element element
+dump 2 all custom 1 dump.sna c_sna[*]
+
+#dump_modify 1 element Nb 
+# Run the simulation (dummy run if just computing descriptors)
+run 0
